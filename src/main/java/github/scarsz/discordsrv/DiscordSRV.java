@@ -808,9 +808,17 @@ public class DiscordSRV extends JavaPlugin implements Listener {
         if (getHookedPlugins().size() == 0 || channel == null) {
             if (DiscordSRV.config().getBoolean("Experiment_MCDiscordReserializer")) {
                 TextComponent textComponent = MinecraftSerializer.serialize(message);
-                for (Player player : PlayerUtil.getOnlinePlayers()) TextAdapter.sendComponent(player, textComponent);
+                for (Player player : PlayerUtil.getOnlinePlayers()) {
+                    if (player.hasPermission("discordsrv.chat")) {
+                        TextAdapter.sendComponent(player, textComponent);
+                    }
+                }
             } else {
-                for (Player player : PlayerUtil.getOnlinePlayers()) player.sendMessage(message);
+                for (Player player : PlayerUtil.getOnlinePlayers()) {
+                    if (player.hasPermission("discordsrv.chat")) {
+                        player.sendMessage(message);
+                    }
+                }
             }
 
             PlayerUtil.notifyPlayersOfMentions(null, message);
